@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Hub – Nova Script</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070709;
+    --surface: #0e0e12;
+    --surface2: #141419;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.12);
+    --accent: #7c6dfa;
+    --accent2: #a78bfa;
+    --accent-glow: rgba(124,109,250,0.25);
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --muted2: #4a4a5a;
+    --white: #ffffff;
+    --green: #34d399;
+    --red: #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: rgba(124,109,250,0.3); }
+
+  /* CUSTOM CURSOR */
+  .cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    width: 28px; height: 28px;
+    border: 1px solid rgba(124,109,250,0.4);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: all 0.08s ease;
+  }
+  body { cursor: none; }
+
+  /* NOISE */
+  .noise {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 9000;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+    background: rgba(7,7,9,0.8);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--white);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent);
+    animation: pulse 2.5s ease infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .nav-right { display: flex; align-items: center; gap: 32px; }
+  .nav-link {
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: -0.1px;
+  }
+  .nav-link:hover { color: var(--text); }
+
+  .discord-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 18px;
+    background: rgba(124,109,250,0.12);
+    border: 1px solid rgba(124,109,250,0.3);
+    border-radius: 8px;
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    letter-spacing: -0.1px;
+  }
+  .discord-btn:hover {
+    background: rgba(124,109,250,0.2);
+    border-color: rgba(124,109,250,0.5);
+    color: var(--white);
+  }
+  .discord-icon { font-size: 16px; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 64px;
+  }
+
+  /* BG GRADIENT */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(124,109,250,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 60%, rgba(167,139,250,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* GRID */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(124,109,250,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,109,250,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    max-width: 800px;
+    padding: 0 24px;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px;
+    background: rgba(124,109,250,0.08);
+    border: 1px solid rgba(124,109,250,0.2);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent2);
+    letter-spacing: 0.3px;
+    margin-bottom: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    animation: fadeUp 0.6s ease forwards; opacity: 0;
+  }
+  .badge-dot {
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero-title {
+    font-size: clamp(52px, 9vw, 108px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -3px;
+    color: var(--white);
+    animation: fadeUp 0.6s 0.1s ease forwards; opacity: 0;
+  }
+  .hero-title .grad {
+    background: linear-gradient(135deg, var(--accent2) 0%, #c4b5fd 50%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 20px;
+    line-height: 1.6;
+    max-width: 540px;
+    margin-left: auto; margin-right: auto;
+    letter-spacing: -0.2px;
+    animation: fadeUp 0.6s 0.2s ease forwards; opacity: 0;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 600; }
+
+  .hero-cta {
+    margin-top: 40px;
+    display: flex; gap: 12px; justify-content: center;
+    animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0;
+  }
+
+  .btn-main {
+    padding: 14px 32px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    text-decoration: none;
+    cursor: none;
+    transition: all 0.2s;
+    box-shadow: 0 0 0 0 var(--accent-glow);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-main:hover {
+    background: var(--accent2);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px var(--accent-glow), 0 0 0 1px rgba(124,109,250,0.4);
+  }
+
+  .btn-ghost {
+    padding: 14px 28px;
+    background: transparent;
+    border: 1px solid var(--border-bright);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: none;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* TRUST BAR */
+  .trust-bar {
+    display: flex; justify-content: center; align-items: center; gap: 40px;
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s 0.4s ease forwards; opacity: 0;
+  }
+  .trust-item {
+    text-align: center;
+  }
+  .trust-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .trust-num span { color: var(--accent2); }
+  .trust-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .trust-divider {
+    width: 1px; height: 36px;
+    background: var(--border);
+  }
+
+  /* PRODUCT SECTION */
+  .section {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .section-title {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    color: var(--white);
+    line-height: 1.05;
+  }
+  .section-title .muted { color: var(--muted2); }
+
+  /* PRODUCT CARD — single centered card */
+  .product-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 64px;
+  }
+
+  .product-card {
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    border-radius: 20px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 680px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,109,250,0.2), 0 0 60px rgba(124,109,250,0.08);
+  }
+
+  .card-top-accent {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+  }
+
+  .card-inner {
+    padding: 44px;
+  }
+
+  .card-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+
+  .card-badges {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+
+  .tag {
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .tag-purple { background: rgba(124,109,250,0.15); color: var(--accent2); border: 1px solid rgba(124,109,250,0.25); }
+  .tag-green { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+  .tag-orange { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+
+  .card-price-area { text-align: right; flex-shrink: 0; }
+  .price {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .price sup {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0;
+    vertical-align: top;
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .price-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .card-name {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+  }
+  .card-name span { color: var(--accent2); }
+
+  .card-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 32px;
+    max-width: 500px;
+  }
+
+  .features-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+
+  .feature {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.2s;
+  }
+  .feature:hover { border-color: rgba(124,109,250,0.2); }
+
+  .feature-icon-box {
+    width: 30px; height: 30px;
+    background: rgba(124,109,250,0.1);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .feature-text-box {}
+  .feature-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.2px;
+  }
+  .feature-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .card-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+
+  .card-footer-row {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .buy-btn {
+    flex: 1;
+    padding: 16px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    cursor: none;
+    transition: all 0.2s;
+    text-decoration: none;
+    text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .buy-btn:hover {
+    background: var(--accent2);
+    box-shadow: 0 8px 24px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+
+  .discord-side {
+    padding: 16px 20px;
+    background: transparent;
+    border: 1px solid var(--border-bright);
+    border-radius: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .discord-side:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+  /* UPDATE TICKER */
+  .update-ticker {
+    background: rgba(52,211,153,0.05);
+    border: 1px solid rgba(52,211,153,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ticker-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+  }
+  .ticker-text {
+    font-size: 12px;
+    color: var(--green);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* HIGHLIGHTS / WHY SECTION */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 56px;
+  }
+
+  .why-card {
+    padding: 36px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: border-color 0.2s;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .why-card.visible {
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .why-card:hover { border-color: rgba(124,109,250,0.2); }
+
+  .why-icon {
+    font-size: 28px;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .why-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.4px;
+    margin-bottom: 10px;
+  }
+  .why-text {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    padding: 20px 0;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    margin: 0 -48px;
+  }
+  .marquee-track {
+    display: flex; gap: 48px;
+    white-space: nowrap;
+    animation: marquee 18s linear infinite;
+  }
+  .marquee-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+  .marquee-item .m-dot {
+    width: 4px; height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* REVIEWS */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 56px;
+  }
+
+  .review {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: border-color 0.2s;
+  }
+  .review.visible { animation: fadeUp 0.5s ease forwards; }
+  .review:hover { border-color: rgba(124,109,250,0.15); }
+
+  .stars {
+    color: var(--accent2);
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .review-text {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .review-author {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: rgba(124,109,250,0.12);
+    border: 1px solid rgba(124,109,250,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .author-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .author-tag {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    padding: 120px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,109,250,0.1) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 900;
+    letter-spacing: -2.5px;
+    color: var(--white);
+    position: relative; z-index: 1;
+    margin-bottom: 16px;
+    line-height: 1.05;
+  }
+  .cta-title span {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cta-sub {
+    font-size: 16px;
+    color: var(--muted);
+    position: relative; z-index: 1;
+    margin-bottom: 40px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .footer-links {
+    display: flex; gap: 24px;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--text); }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--muted2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-right .nav-link { display: none; }
+    .section { padding: 80px 20px; }
+    .why-grid { grid-template-columns: 1fr; gap: 12px; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .features-list { grid-template-columns: 1fr; }
+    .trust-bar { gap: 20px; flex-wrap: wrap; }
+    .hero-title { letter-spacing: -2px; }
+    footer { flex-direction: column; gap: 20px; }
+    .marquee-wrap { margin: 0 -20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Nova Hub
+  </div>
+  <div class="nav-right">
+    <a href="#product" class="nav-link">Script</a>
+    <a href="#why" class="nav-link">Features</a>
+    <a href="#reviews" class="nav-link">Reviews</a>
+    <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="discord-btn">
+      <span class="discord-icon">☎</span>
+      Discord
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="badge">
+      <div class="badge-dot"></div>
+      NOVA SCRIPT — LIVE NOW
+    </div>
+
+    <h1 class="hero-title">
+      The Script<br>
+      <span class="grad">That Breaks Games.</span>
+    </h1>
+
+    <p class="hero-sub">
+      One script. <strong>Every unfair advantage.</strong> Instant steal, auto PvP, infinite jump, brainrot movement &mdash; all in one seamlessly updated package.
+    </p>
+
+    <div class="hero-cta">
+      <a href="#product" class="btn-main">
+        Get Nova Script →
+      </a>
+      <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="btn-ghost">
+        ☎ Join Discord
+      </a>
+    </div>
+
+    <div class="trust-bar">
+      <div class="trust-item">
+        <div class="trust-num">10<span>K+</span></div>
+        <div class="trust-label">Players</div>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <div class="trust-num">99<span>%</span></div>
+        <div class="trust-label">Undetected</div>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <div class="trust-num">Weekly</div>
+        <div class="trust-label">Updates</div>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <div class="trust-num">24<span>/7</span></div>
+        <div class="trust-label">Support</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div style="padding: 0 48px; overflow: hidden; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="marquee-track" style="padding: 18px 0;">
+    <div class="marquee-item"><span class="m-dot"></span> INSTANT STEAL</div>
+    <div class="marquee-item"><span class="m-dot"></span> AUTO PVP</div>
+    <div class="marquee-item"><span class="m-dot"></span> INFINITE JUMP</div>
+    <div class="marquee-item"><span class="m-dot"></span> BRAINROT MOVEMENT</div>
+    <div class="marquee-item"><span class="m-dot"></span> WEEKLY CHECKS</div>
+    <div class="marquee-item"><span class="m-dot"></span> UNDETECTED</div>
+    <div class="marquee-item"><span class="m-dot"></span> INSTANT DELIVERY</div>
+    <div class="marquee-item"><span class="m-dot"></span> INSTANT STEAL</div>
+    <div class="marquee-item"><span class="m-dot"></span> AUTO PVP</div>
+    <div class="marquee-item"><span class="m-dot"></span> INFINITE JUMP</div>
+    <div class="marquee-item"><span class="m-dot"></span> BRAINROT MOVEMENT</div>
+    <div class="marquee-item"><span class="m-dot"></span> WEEKLY CHECKS</div>
+    <div class="marquee-item"><span class="m-dot"></span> UNDETECTED</div>
+    <div class="marquee-item"><span class="m-dot"></span> INSTANT DELIVERY</div>
+  </div>
+</div>
+
+<!-- PRODUCT -->
+<section class="section" id="product">
+  <div class="section-label">001 — The Script</div>
+  <h2 class="section-title">Nova Script<br><span class="muted">One Tool. Total Control.</span></h2>
+
+  <div class="product-wrapper">
+    <div class="product-card">
+      <div class="card-top-accent"></div>
+      <div class="card-inner">
+        <div class="card-header">
+          <div class="card-badges">
+            <span class="tag tag-purple">⚡ Nova Script</span>
+            <span class="tag tag-green">✓ Undetected</span>
+            <span class="tag tag-orange">🔥 Trending</span>
+          </div>
+          <div class="card-price-area">
+            <div class="price"><sup>€</sup>9<span style="font-size:22px;letter-spacing:-1px;">.99</span></div>
+            <div class="price-note">one-time purchase</div>
+          </div>
+        </div>
+
+        <div class="card-name">Nova <span>Script</span></div>
+        <p class="card-desc">
+          Built for the players who don't lose. Nova Script is the most aggressive, polished, and consistently updated Roblox script on the market. Steal items before anyone blinks, fight on autopilot, jump when physics says no — and look absolutely unhinged while doing it. This is brainrot, engineered.
+        </p>
+
+        <div class="features-list">
+          <div class="feature">
+            <div class="feature-icon-box">⚡</div>
+            <div class="feature-text-box">
+              <div class="feature-title">Instant Steal</div>
+              <div class="feature-sub">Snatch items the moment they spawn. Zero delay, zero competition.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon-box">⚔️</div>
+            <div class="feature-text-box">
+              <div class="feature-title">Auto PvP</div>
+              <div class="feature-sub">Locks onto enemies and destroys them automatically. You just watch.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon-box">🚀</div>
+            <div class="feature-text-box">
+              <div class="feature-title">Infinite Jump</div>
+              <div class="feature-sub">Gravity is a suggestion. Jump forever, reach anywhere, escape anything.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon-box">🧠</div>
+            <div class="feature-text-box">
+              <div class="feature-title">Brainrot Movement</div>
+              <div class="feature-sub">Erratic, unpredictable, chaotic — impossible to target or counter.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon-box">🔄</div>
+            <div class="feature-text-box">
+              <div class="feature-title">Weekly Updates</div>
+              <div class="feature-sub">New features and patches pushed every week. Never falls behind.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon-box">🛡️</div>
+            <div class="feature-text-box">
+              <div class="feature-title">Anti-Detection Checks</div>
+              <div class="feature-sub">Regular integrity checks keep Nova Script invisible to every system.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="update-ticker">
+          <div class="ticker-dot"></div>
+          <div class="ticker-text">Last update: Feb 2025 — Added new brainrot movement patterns + auto-dodge system</div>
+        </div>
+
+        <div class="card-divider" style="margin-top: 28px;"></div>
+
+        <div class="card-footer-row">
+          <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="buy-btn">
+            Get Nova Script — €9.99
+          </a>
+          <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="discord-side">
+            ☎ Discord
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="section" id="why" style="padding-top: 0;">
+  <div class="section-label">002 — Why Nova Hub</div>
+  <h2 class="section-title">Built Different.<br><span class="muted">On Every Level.</span></h2>
+
+  <div class="why-grid">
+    <div class="why-card">
+      <span class="why-icon">🔒</span>
+      <div class="why-title">Stays Undetected</div>
+      <p class="why-text">Our team monitors every anti-cheat update in real time. Patches go live before most people even hear about the threat.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">⚡</span>
+      <div class="why-title">Instant Access</div>
+      <p class="why-text">Automated delivery. Purchase through Discord and get your key within seconds. No waiting, no verification queues.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">📅</span>
+      <div class="why-title">Weekly Updates</div>
+      <p class="why-text">New features, new movement patterns, new exploits — shipped every week. You paid once. You get everything forever.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🛠️</span>
+      <div class="why-title">24/7 Support</div>
+      <p class="why-text">Active Discord support team. Average response under 10 minutes, any time of day or night. Real people, real help.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">💳</span>
+      <div class="why-title">Secure & Private</div>
+      <p class="why-text">All transactions handled through encrypted channels. Your identity and payment details stay completely private.</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">👥</span>
+      <div class="why-title">Active Community</div>
+      <p class="why-text">Join 10,000+ players in the Nova Hub Discord. Share configs, get tips, and get updates the moment they drop.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews" style="padding-top: 0;">
+  <div class="section-label">003 — Reviews</div>
+  <h2 class="section-title">10,000 Players.<br><span class="muted">All Winners.</span></h2>
+
+  <div class="reviews-grid">
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"The instant steal is absolutely broken. I had items before anyone even realized the round started. Best €9.99 I've ever spent."</p>
+      <div class="review-author">
+        <div class="avatar">K</div>
+        <div>
+          <div class="author-name">KillSwitch_99</div>
+          <div class="author-tag">// Verified Buyer</div>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Auto PvP is genuinely unfair in the best way. I went 47-0 and people started leaving the lobby. Absolutely elite script."</p>
+      <div class="review-author">
+        <div class="avatar">S</div>
+        <div>
+          <div class="author-name">ShadowByte</div>
+          <div class="author-tag">// Nova Hub Member</div>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Been using Nova for 4 months. Zero bans. The weekly updates actually hit — they added new brainrot patterns and it's insane."</p>
+      <div class="review-author">
+        <div class="avatar">R</div>
+        <div>
+          <div class="author-name">RedLine_X</div>
+          <div class="author-tag">// 4 Month Customer</div>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"The brainrot movement makes me literally untargetable. People think I'm lagging but I'm just running Nova Script lmao."</p>
+      <div class="review-author">
+        <div class="avatar">V</div>
+        <div>
+          <div class="author-name">Vortex_Pro</div>
+          <div class="author-tag">// Verified Buyer</div>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Infinite jump + instant steal combo is just dirty. Discord support helped me set everything up in 5 minutes. Huge W."</p>
+      <div class="review-author">
+        <div class="avatar">N</div>
+        <div>
+          <div class="author-name">NightFall_</div>
+          <div class="author-tag">// Verified Buyer</div>
+        </div>
+      </div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Cheapest and most powerful script I've used. The updates never stop coming. Nova Hub is on a different level fr fr."</p>
+      <div class="review-author">
+        <div class="avatar">G</div>
+        <div>
+          <div class="author-name">GhostTrace</div>
+          <div class="author-tag">// Verified Buyer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta">
+  <h2 class="cta-title">Ready to<br><span>dominate?</span></h2>
+  <p class="cta-sub">Join 10,000+ players who already play on a different level.</p>
+  <div style="display:flex; gap: 12px; justify-content: center;">
+    <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="btn-main" style="font-size: 16px; padding: 16px 40px;">
+      Get Nova Script — €9.99
+    </a>
+    <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="btn-ghost" style="font-size: 15px;">
+      ☎ Join Discord
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <div class="logo-dot"></div>
+    Nova Hub
+  </div>
+  <div class="footer-links">
+    <a href="https://discord.gg/QaDbxHezMs" target="_blank">Discord</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">FAQ</a>
+    <a href="#">Support</a>
+  </div>
+  <div class="footer-copy">© 2025 Nova Hub. All rights reserved.</div>
+</footer>
+
+<script>
+  // CURSOR
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+  });
+
+  (function animate() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animate);
+  })();
+
+  document.querySelectorAll('a, button, .product-card, .why-card, .review').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      dot.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1.6)';
+      ring.style.borderColor = 'rgba(124,109,250,0.7)';
+    });
+    el.addEventListener('mouseleave', () => {
+      dot.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.borderColor = 'rgba(124,109,250,0.4)';
+    });
+  });
+
+  // SCROLL ANIMATIONS
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.why-card, .review').forEach((el, i) => {
+    el.style.animationDelay = (i * 0.07) + 's';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
