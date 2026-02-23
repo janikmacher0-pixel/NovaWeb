@@ -1,1068 +1,1716 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nova Hub – Nova Script</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Sabrine Juweliere — Luxus Gold & Edelsteine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #070709;
-    --surface: #0e0e12;
-    --surface2: #141419;
-    --border: rgba(255,255,255,0.07);
-    --border-bright: rgba(255,255,255,0.12);
-    --accent: #7c6dfa;
-    --accent2: #a78bfa;
-    --accent-glow: rgba(124,109,250,0.25);
-    --text: #e8e8f0;
-    --muted: #6b6b80;
-    --muted2: #4a4a5a;
-    --white: #ffffff;
-    --green: #34d399;
-    --red: #f87171;
+    --black: #080705;
+    --dark: #100f0c;
+    --dark2: #1a1915;
+    --dark3: #242320;
+    --gold: #c9a84c;
+    --gold2: #e8c96a;
+    --gold3: #f5dfa0;
+    --gold-dim: rgba(201,168,76,0.15);
+    --gold-glow: rgba(201,168,76,0.3);
+    --text: #e8e4d8;
+    --muted: #8a8070;
+    --muted2: #5a5448;
+    --border: rgba(201,168,76,0.12);
+    --border-bright: rgba(201,168,76,0.25);
+    --white: #f9f5ec;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--bg);
+    background: var(--black);
     color: var(--text);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  ::selection { background: rgba(124,109,250,0.3); }
+  ::selection { background: rgba(201,168,76,0.25); }
 
-  /* CUSTOM CURSOR */
-  .cursor-dot {
-    width: 6px; height: 6px;
-    background: var(--accent2);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none; z-index: 9999;
-    transform: translate(-50%,-50%);
-    transition: transform 0.1s;
-  }
+  /* CURSOR */
+  .cursor { position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
   .cursor-ring {
-    width: 28px; height: 28px;
-    border: 1px solid rgba(124,109,250,0.4);
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold2);
     border-radius: 50%;
     position: fixed; top: 0; left: 0;
     pointer-events: none; z-index: 9998;
     transform: translate(-50%,-50%);
-    transition: all 0.08s ease;
+    transition: all 0.12s ease;
+  }
+  .cursor-dot {
+    width: 5px; height: 5px;
+    background: var(--gold2);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
   }
   body { cursor: none; }
-
-  /* NOISE */
-  .noise {
-    position: fixed; inset: 0;
-    pointer-events: none; z-index: 9000;
-    opacity: 0.025;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
 
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0;
     z-index: 500;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 48px;
-    height: 64px;
-    background: rgba(7,7,9,0.8);
-    backdrop-filter: blur(24px);
+    padding: 0 60px;
+    height: 72px;
+    background: rgba(8,7,5,0.88);
+    backdrop-filter: blur(30px);
     border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
   }
 
-  .logo {
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    color: var(--white);
-    display: flex; align-items: center; gap: 8px;
+  .logo-wrap {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
   }
-  .logo-dot {
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 12px var(--accent);
-    animation: pulse 2.5s ease infinite;
+  .logo-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--gold2);
+    text-transform: uppercase;
+    line-height: 1;
   }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .logo-sub {
+    font-size: 8px;
+    font-weight: 400;
+    letter-spacing: 5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    line-height: 1;
+  }
 
-  .nav-right { display: flex; align-items: center; gap: 32px; }
-  .nav-link {
-    font-size: 14px;
+  .nav-links {
+    display: flex; align-items: center; gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
     color: var(--muted);
     text-decoration: none;
-    font-weight: 500;
+    text-transform: uppercase;
     transition: color 0.2s;
-    letter-spacing: -0.1px;
+    position: relative;
   }
-  .nav-link:hover { color: var(--text); }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--gold2); }
+  .nav-links a:hover::after { width: 100%; }
 
-  .discord-btn {
-    display: flex; align-items: center; gap: 8px;
-    padding: 9px 18px;
-    background: rgba(124,109,250,0.12);
-    border: 1px solid rgba(124,109,250,0.3);
-    border-radius: 8px;
-    color: var(--accent2);
-    text-decoration: none;
-    font-size: 13px;
+  .nav-cta {
+    padding: 10px 28px;
+    border: 1px solid var(--gold);
+    border-radius: 0;
+    color: var(--gold);
+    font-size: 10px;
     font-weight: 600;
-    transition: all 0.2s;
-    letter-spacing: -0.1px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.25s;
+    background: transparent;
   }
-  .discord-btn:hover {
-    background: rgba(124,109,250,0.2);
-    border-color: rgba(124,109,250,0.5);
-    color: var(--white);
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--black);
   }
-  .discord-icon { font-size: 16px; }
 
   /* HERO */
   .hero {
     min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     position: relative;
     overflow: hidden;
-    padding-top: 64px;
   }
 
-  /* BG GRADIENT */
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(124,109,250,0.12) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 40% at 80% 60%, rgba(167,139,250,0.06) 0%, transparent 60%);
-    pointer-events: none;
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 80px 100px 80px;
+    position: relative;
+    z-index: 2;
   }
 
-  /* GRID */
-  .hero-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(124,109,250,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(124,109,250,0.04) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
-  }
-
-  .hero-content {
-    position: relative; z-index: 2;
-    text-align: center;
-    max-width: 800px;
-    padding: 0 24px;
-  }
-
-  .badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 5px 14px;
-    background: rgba(124,109,250,0.08);
-    border: 1px solid rgba(124,109,250,0.2);
-    border-radius: 100px;
-    font-size: 12px;
+  .hero-eyebrow {
+    font-size: 10px;
     font-weight: 500;
-    color: var(--accent2);
-    letter-spacing: 0.3px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
     margin-bottom: 28px;
-    font-family: 'JetBrains Mono', monospace;
-    animation: fadeUp 0.6s ease forwards; opacity: 0;
+    display: flex; align-items: center; gap: 16px;
+    opacity: 0;
+    animation: fadeLeft 0.9s 0.2s ease forwards;
   }
-  .badge-dot {
-    width: 5px; height: 5px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--gold);
   }
 
   .hero-title {
-    font-size: clamp(52px, 9vw, 108px);
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -3px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(60px, 6vw, 96px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -1px;
     color: var(--white);
-    animation: fadeUp 0.6s 0.1s ease forwards; opacity: 0;
+    opacity: 0;
+    animation: fadeLeft 0.9s 0.35s ease forwards;
   }
-  .hero-title .grad {
-    background: linear-gradient(135deg, var(--accent2) 0%, #c4b5fd 50%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold2);
   }
 
-  .hero-sub {
-    font-size: 18px;
+  .hero-desc {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.85;
     color: var(--muted);
-    font-weight: 400;
-    margin-top: 20px;
-    line-height: 1.6;
-    max-width: 540px;
-    margin-left: auto; margin-right: auto;
-    letter-spacing: -0.2px;
-    animation: fadeUp 0.6s 0.2s ease forwards; opacity: 0;
-  }
-  .hero-sub strong { color: var(--text); font-weight: 600; }
-
-  .hero-cta {
-    margin-top: 40px;
-    display: flex; gap: 12px; justify-content: center;
-    animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0;
+    max-width: 420px;
+    margin-top: 28px;
+    letter-spacing: 0.3px;
+    opacity: 0;
+    animation: fadeLeft 0.9s 0.5s ease forwards;
   }
 
-  .btn-main {
-    padding: 14px 32px;
-    background: var(--accent);
-    border: none;
-    border-radius: 10px;
-    color: var(--white);
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
+  .hero-actions {
+    display: flex; gap: 20px; align-items: center;
+    margin-top: 48px;
+    opacity: 0;
+    animation: fadeLeft 0.9s 0.65s ease forwards;
+  }
+
+  .btn-gold {
+    padding: 16px 40px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
     text-decoration: none;
-    cursor: none;
-    transition: all 0.2s;
-    box-shadow: 0 0 0 0 var(--accent-glow);
-    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.25s;
+    border: 1px solid var(--gold);
   }
-  .btn-main:hover {
-    background: var(--accent2);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 30px var(--accent-glow), 0 0 0 1px rgba(124,109,250,0.4);
+  .btn-gold:hover {
+    background: var(--gold2);
+    border-color: var(--gold2);
+    box-shadow: 0 8px 40px var(--gold-glow);
+    transform: translateY(-2px);
   }
 
-  .btn-ghost {
-    padding: 14px 28px;
+  .btn-outline {
+    padding: 16px 36px;
     background: transparent;
-    border: 1px solid var(--border-bright);
-    border-radius: 10px;
-    color: var(--muted);
-    font-size: 15px;
-    font-weight: 500;
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
     text-decoration: none;
-    cursor: none;
-    transition: all 0.2s;
-    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border-bright);
+    transition: all 0.25s;
   }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold2);
+  }
 
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* TRUST BAR */
-  .trust-bar {
-    display: flex; justify-content: center; align-items: center; gap: 40px;
-    margin-top: 56px;
+  /* HERO STATS */
+  .hero-stats {
+    display: flex; gap: 48px;
+    margin-top: 60px;
     padding-top: 40px;
     border-top: 1px solid var(--border);
-    animation: fadeUp 0.6s 0.4s ease forwards; opacity: 0;
+    opacity: 0;
+    animation: fadeLeft 0.9s 0.8s ease forwards;
   }
-  .trust-item {
-    text-align: center;
-  }
-  .trust-num {
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--white);
-    letter-spacing: -1px;
+  .stat-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--gold2);
     line-height: 1;
+    letter-spacing: -1px;
   }
-  .trust-num span { color: var(--accent2); }
-  .trust-label {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 4px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-  }
-  .trust-divider {
-    width: 1px; height: 36px;
-    background: var(--border);
-  }
-
-  /* PRODUCT SECTION */
-  .section {
-    padding: 120px 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted2);
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-label::before {
-    content: '';
-    width: 20px; height: 1px;
-    background: var(--accent);
-    display: inline-block;
-  }
-
-  .section-title {
-    font-size: clamp(36px, 5vw, 56px);
-    font-weight: 800;
-    letter-spacing: -2px;
-    color: var(--white);
-    line-height: 1.05;
-  }
-  .section-title .muted { color: var(--muted2); }
-
-  /* PRODUCT CARD — single centered card */
-  .product-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 64px;
-  }
-
-  .product-card {
-    background: var(--surface);
-    border: 1px solid var(--border-bright);
-    border-radius: 20px;
-    overflow: hidden;
-    width: 100%;
-    max-width: 680px;
-    position: relative;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,109,250,0.2), 0 0 60px rgba(124,109,250,0.08);
-  }
-
-  .card-top-accent {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
-  }
-
-  .card-inner {
-    padding: 44px;
-  }
-
-  .card-header {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    margin-bottom: 28px;
-    gap: 20px;
-  }
-
-  .card-badges {
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
-
-  .tag {
-    padding: 4px 10px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.5px;
-  }
-  .tag-purple { background: rgba(124,109,250,0.15); color: var(--accent2); border: 1px solid rgba(124,109,250,0.25); }
-  .tag-green { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
-  .tag-orange { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-
-  .card-price-area { text-align: right; flex-shrink: 0; }
-  .price {
-    font-size: 42px;
-    font-weight: 800;
-    color: var(--white);
-    letter-spacing: -2px;
-    line-height: 1;
-  }
-  .price sup {
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 0;
-    vertical-align: top;
     margin-top: 6px;
-    display: inline-block;
-  }
-  .price-note {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 4px;
-    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
   }
 
-  .card-name {
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--white);
-    letter-spacing: -1px;
-    margin-bottom: 10px;
-  }
-  .card-name span { color: var(--accent2); }
-
-  .card-desc {
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.65;
-    margin-bottom: 32px;
-    max-width: 500px;
+  /* HERO RIGHT — image panel */
+  .hero-right {
+    position: relative;
+    overflow: hidden;
   }
 
-  .features-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 36px;
+  .hero-img-panel {
+    position: absolute;
+    inset: 0;
+    background: var(--dark);
+    overflow: hidden;
   }
 
-  .feature {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 14px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    transition: border-color 0.2s;
-  }
-  .feature:hover { border-color: rgba(124,109,250,0.2); }
-
-  .feature-icon-box {
-    width: 30px; height: 30px;
-    background: rgba(124,109,250,0.1);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
-    flex-shrink: 0;
+  /* Simulated luxury jewelry photo using pure CSS */
+  .hero-visual {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 30%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 100% 100% at 60% 80%, rgba(201,168,76,0.04) 0%, transparent 70%);
   }
 
-  .feature-text-box {}
-  .feature-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.2px;
-  }
-  .feature-sub {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-    line-height: 1.4;
-  }
-
-  .card-divider {
-    height: 1px;
-    background: var(--border);
-    margin-bottom: 28px;
-  }
-
-  .card-footer-row {
-    display: flex; align-items: center; gap: 16px;
-  }
-
-  .buy-btn {
-    flex: 1;
-    padding: 16px;
-    background: var(--accent);
-    border: none;
-    border-radius: 10px;
-    color: var(--white);
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: -0.2px;
-    cursor: none;
-    transition: all 0.2s;
-    text-decoration: none;
-    text-align: center;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .buy-btn:hover {
-    background: var(--accent2);
-    box-shadow: 0 8px 24px var(--accent-glow);
-    transform: translateY(-1px);
-  }
-
-  .discord-side {
-    padding: 16px 20px;
-    background: transparent;
-    border: 1px solid var(--border-bright);
-    border-radius: 10px;
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: none;
-    transition: all 0.2s;
-    white-space: nowrap;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .discord-side:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-
-  /* UPDATE TICKER */
-  .update-ticker {
-    background: rgba(52,211,153,0.05);
-    border: 1px solid rgba(52,211,153,0.15);
-    border-radius: 8px;
-    padding: 10px 14px;
-    margin-top: 20px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .ticker-dot {
-    width: 6px; height: 6px;
-    background: var(--green);
+  /* Large gold ring visual */
+  .big-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px; height: 420px;
     border-radius: 50%;
-    flex-shrink: 0;
-    animation: pulse 2s infinite;
+    border: 2px solid rgba(201,168,76,0.4);
+    box-shadow:
+      inset 0 0 80px rgba(201,168,76,0.06),
+      0 0 0 1px rgba(201,168,76,0.08),
+      0 0 120px rgba(201,168,76,0.06);
+    animation: slowSpin 20s linear infinite;
   }
-  .ticker-text {
-    font-size: 12px;
-    color: var(--green);
-    font-family: 'JetBrains Mono', monospace;
+  .big-ring::before {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+  .big-ring::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.1);
+    border-style: dashed;
   }
 
-  /* HIGHLIGHTS / WHY SECTION */
-  .why-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-top: 56px;
+  .gem-cluster {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px; height: 180px;
+  }
+  .gem {
+    position: absolute;
+    border-radius: 50%;
+    animation: gemPulse 3s ease-in-out infinite;
+  }
+  .gem-1 {
+    width: 80px; height: 80px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 35% 30%, rgba(232,201,106,0.9), rgba(201,168,76,0.5), rgba(100,80,20,0.3));
+    box-shadow: 0 0 40px rgba(201,168,76,0.4), inset 0 0 20px rgba(255,255,255,0.1);
+  }
+  .gem-2 {
+    width: 44px; height: 44px;
+    top: 10%; left: 55%;
+    background: radial-gradient(circle at 35% 30%, rgba(245,223,160,0.8), rgba(201,168,76,0.4));
+    box-shadow: 0 0 20px rgba(201,168,76,0.3);
+    animation-delay: 0.5s;
+  }
+  .gem-3 {
+    width: 30px; height: 30px;
+    bottom: 15%; right: 10%;
+    background: radial-gradient(circle at 35% 30%, rgba(232,201,106,0.7), rgba(150,120,50,0.3));
+    box-shadow: 0 0 16px rgba(201,168,76,0.25);
+    animation-delay: 1s;
+  }
+  .gem-4 {
+    width: 22px; height: 22px;
+    bottom: 20%; left: 5%;
+    background: radial-gradient(circle at 35% 30%, rgba(245,223,160,0.6), rgba(201,168,76,0.3));
+    animation-delay: 1.5s;
   }
 
-  .why-card {
-    padding: 36px 32px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    transition: border-color 0.2s;
-    opacity: 0;
-    transform: translateY(20px);
+  @keyframes gemPulse {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
   }
-  .why-card.visible {
-    animation: fadeUp 0.5s ease forwards;
+  @keyframes slowSpin {
+    from { transform: translate(-50%,-50%) rotate(0deg); }
+    to { transform: translate(-50%,-50%) rotate(360deg); }
   }
-  .why-card:hover { border-color: rgba(124,109,250,0.2); }
 
-  .why-icon {
-    font-size: 28px;
-    margin-bottom: 18px;
-    display: block;
+  /* Decorative text on the visual */
+  .visual-deco-text {
+    position: absolute;
+    bottom: 60px; right: 48px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(201,168,76,0.4);
+    letter-spacing: 1px;
+    text-align: right;
+    line-height: 1.8;
   }
-  .why-title {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--white);
-    letter-spacing: -0.4px;
-    margin-bottom: 10px;
+
+  /* Vertical lines deco */
+  .v-line {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.2), transparent);
   }
-  .why-text {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.65;
+  .v-line-1 { height: 200px; left: 20%; top: 10%; }
+  .v-line-2 { height: 150px; right: 25%; bottom: 15%; }
+
+  /* Corner dots */
+  .corner-dot {
+    position: absolute;
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  .corner-dot-tl { top: 40px; left: 40px; }
+  .corner-dot-br { bottom: 40px; right: 40px; }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* MARQUEE */
   .marquee-wrap {
-    padding: 20px 0;
-    overflow: hidden;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    margin: 0 -48px;
+    background: var(--dark2);
+    padding: 16px 0;
+    overflow: hidden;
   }
   .marquee-track {
-    display: flex; gap: 48px;
+    display: flex; gap: 64px;
     white-space: nowrap;
-    animation: marquee 18s linear infinite;
+    animation: marquee 22s linear infinite;
   }
   .marquee-item {
-    display: flex; align-items: center; gap: 12px;
-    font-size: 12px;
-    font-weight: 600;
+    display: flex; align-items: center; gap: 16px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
     color: var(--muted);
-    letter-spacing: 1.5px;
     text-transform: uppercase;
-    font-family: 'JetBrains Mono', monospace;
     flex-shrink: 0;
   }
-  .marquee-item .m-dot {
+  .marquee-sep {
     width: 4px; height: 4px;
-    background: var(--accent);
+    background: var(--gold);
     border-radius: 50%;
+    flex-shrink: 0;
   }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
 
-  /* REVIEWS */
-  .reviews-grid {
+  /* COLLECTIONS SECTION */
+  .section {
+    padding: 120px 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 64px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 300;
+    letter-spacing: -1px;
+    color: var(--white);
+    line-height: 1.08;
+  }
+  .section-title-main em { font-style: italic; color: var(--gold2); }
+
+  /* PRODUCT GRID */
+  .products-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-top: 56px;
+    gap: 2px;
   }
 
-  .review {
-    padding: 28px;
-    background: var(--surface);
+  .product-card {
+    background: var(--dark2);
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: all 0.4s ease;
     border: 1px solid var(--border);
-    border-radius: 14px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: border-color 0.2s;
   }
-  .review.visible { animation: fadeUp 0.5s ease forwards; }
-  .review:hover { border-color: rgba(124,109,250,0.15); }
+  .product-card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.06);
+    z-index: 2;
+  }
 
-  .stars {
-    color: var(--accent2);
-    font-size: 13px;
-    letter-spacing: 2px;
-    margin-bottom: 14px;
+  /* Product visual — CSS-only luxury jewelry images */
+  .product-visual {
+    height: 320px;
+    position: relative;
+    overflow: hidden;
+    background: var(--dark3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .review-text {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.65;
-    margin-bottom: 20px;
-    font-style: italic;
+
+  /* === RING === */
+  .visual-ring .item-wrap {
+    position: relative;
+    width: 180px; height: 180px;
   }
-  .review-author {
-    display: flex; align-items: center; gap: 10px;
+  .visual-ring .outer-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 10px solid;
+    border-color: transparent;
+    background:
+      linear-gradient(var(--dark3), var(--dark3)) padding-box,
+      linear-gradient(135deg, #c9a84c, #f5dfa0, #a07832, #e8c96a) border-box;
+    box-shadow: 0 0 30px rgba(201,168,76,0.2), inset 0 2px 4px rgba(255,255,255,0.1);
   }
-  .avatar {
-    width: 34px; height: 34px;
-    border-radius: 8px;
-    background: rgba(124,109,250,0.12);
-    border: 1px solid rgba(124,109,250,0.2);
+  .visual-ring .stone {
+    position: absolute;
+    top: -14px; left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 30px;
+    background: radial-gradient(circle at 35% 30%, #b3d9f0, #5ba3cc, #1a5c8a);
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(91,163,204,0.5), 0 2px 4px rgba(0,0,0,0.4);
+    border: 2px solid rgba(201,168,76,0.6);
+  }
+  .visual-ring .inner-shine {
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  /* === NECKLACE === */
+  .visual-necklace .chain-svg {
+    width: 200px; height: 180px;
+    position: relative;
+  }
+  .visual-necklace .pendant {
+    position: absolute;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    width: 50px; height: 50px;
+  }
+  .visual-necklace .pend-outer {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c9a84c, #f5dfa0, #a07832);
+    box-shadow: 0 0 25px rgba(201,168,76,0.3);
     display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent2);
-    font-family: 'JetBrains Mono', monospace;
   }
-  .author-name {
+  .visual-necklace .pend-inner {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffe4a0, #c9a84c, #7a5a1c);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);
+  }
+
+  /* === BRACELET === */
+  .visual-bracelet .brace-wrap {
+    position: relative;
+    width: 200px; height: 200px;
+  }
+  .visual-bracelet .brace-ring {
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 8px solid transparent;
+    background:
+      linear-gradient(var(--dark3), var(--dark3)) padding-box,
+      linear-gradient(135deg, #c9a84c, #f5dfa0, #a07832, #e8c96a, #c9a84c) border-box;
+    transform: rotate(-20deg);
+    box-shadow: 0 0 20px rgba(201,168,76,0.15);
+  }
+  .visual-bracelet .brace-gems {
+    position: absolute;
+    inset: 0;
+    animation: slowSpin 15s linear infinite;
+  }
+  .visual-bracelet .brace-gem {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(232,201,106,1), rgba(150,100,10,0.5));
+    box-shadow: 0 0 8px rgba(201,168,76,0.5);
+  }
+  .bg1 { transform: translate(-50%,-50%) rotate(0deg) translateX(80px); }
+  .bg2 { transform: translate(-50%,-50%) rotate(45deg) translateX(80px); }
+  .bg3 { transform: translate(-50%,-50%) rotate(90deg) translateX(80px); }
+  .bg4 { transform: translate(-50%,-50%) rotate(135deg) translateX(80px); }
+  .bg5 { transform: translate(-50%,-50%) rotate(180deg) translateX(80px); }
+  .bg6 { transform: translate(-50%,-50%) rotate(225deg) translateX(80px); }
+  .bg7 { transform: translate(-50%,-50%) rotate(270deg) translateX(80px); }
+  .bg8 { transform: translate(-50%,-50%) rotate(315deg) translateX(80px); }
+
+  /* === EARRINGS === */
+  .visual-earrings .ear-wrap {
+    display: flex; gap: 40px;
+    align-items: center;
+  }
+  .earring {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .ear-hook {
+    width: 30px; height: 30px;
+    border: 3px solid transparent;
+    border-top: 3px solid #c9a84c;
+    border-right: 3px solid #e8c96a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(201,168,76,0.2);
+  }
+  .ear-chain { width: 2px; height: 40px; background: linear-gradient(to bottom, #c9a84c, #f5dfa0); }
+  .ear-drop {
+    width: 24px; height: 36px;
+    background: linear-gradient(135deg, #c9a84c, #f5dfa0, #a07832);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: 0 0 18px rgba(201,168,76,0.3), inset 0 2px 4px rgba(255,255,255,0.2);
+  }
+
+  /* === BROOCH === */
+  .visual-brooch .brooch-wrap {
+    position: relative;
+    width: 160px; height: 160px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brooch-star {
+    width: 100px; height: 100px;
+    background: linear-gradient(135deg, #c9a84c 0%, #f5dfa0 25%, #a07832 50%, #e8c96a 75%, #c9a84c 100%);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    box-shadow: 0 0 40px rgba(201,168,76,0.3);
+    position: relative;
+  }
+  .brooch-center {
+    position: absolute;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffe4e4, #cc2222, #660000);
+    box-shadow: 0 0 16px rgba(200,30,30,0.4);
+  }
+
+  /* === CHAIN === */
+  .visual-chain .chain-wrap {
+    width: 220px; height: 160px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chain-body {
+    width: 220px; height: 4px;
+    background: linear-gradient(90deg, #7a5a1c, #c9a84c, #f5dfa0, #c9a84c, #e8c96a, #c9a84c, #7a5a1c);
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(201,168,76,0.3);
+    position: relative;
+  }
+  .chain-body::before, .chain-body::after {
+    content: '';
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    width: 100%;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, transparent 0px, transparent 8px, rgba(201,168,76,0.5) 8px, rgba(201,168,76,0.5) 10px);
+  }
+
+  /* Hover overlay */
+  .product-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1;
+  }
+  .product-card:hover .product-visual::before { opacity: 1; }
+
+  .product-badge-wrap {
+    position: absolute;
+    top: 20px; left: 20px;
+    display: flex; gap: 6px;
+    z-index: 2;
+  }
+  .p-badge {
+    padding: 4px 10px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .p-badge-gold { background: var(--gold); color: var(--black); }
+  .p-badge-outline { border: 1px solid rgba(201,168,76,0.4); color: var(--gold); }
+
+  .product-info {
+    padding: 28px 28px 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .product-cat {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .product-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .product-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--gold2);
+    letter-spacing: -0.5px;
+  }
+  .product-price-note {
+    font-size: 10px;
+    color: var(--muted2);
+    margin-top: 2px;
+    letter-spacing: 1px;
+  }
+  .add-btn {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border-bright);
+    background: transparent;
+    color: var(--gold);
+    font-size: 20px;
+    cursor: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+  .add-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+
+  /* FEATURED — horizontal wide card */
+  .featured-section {
+    background: var(--dark2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+    padding: 0;
+  }
+  .featured-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 560px;
+  }
+  .featured-visual {
+    background: var(--dark3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px;
+  }
+  .featured-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  }
+
+  /* Big elaborate pendant visual */
+  .featured-piece {
+    position: relative;
+    width: 260px; height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+  }
+  .fp-chain-link {
+    width: 2px; height: 80px;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.3), #c9a84c, rgba(201,168,76,0.6));
+    position: relative;
+  }
+  .fp-chain-link::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 100%;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-top: none;
+    border-bottom: none;
+    border-radius: 0;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 6px, rgba(201,168,76,0.15) 6px, rgba(201,168,76,0.15) 8px);
+  }
+  .fp-main-gem {
+    width: 100px; height: 120px;
+    background: radial-gradient(ellipse at 35% 30%, #e0f4ff, #5ba3cc, #1a5c8a, #0a2a42);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    box-shadow: 0 0 40px rgba(91,163,204,0.4), 0 0 80px rgba(91,163,204,0.15), inset 0 4px 8px rgba(255,255,255,0.2);
+    position: relative;
+    animation: gemPulse 4s ease-in-out infinite;
+  }
+  .fp-gem-frame {
+    position: absolute;
+    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    background: transparent;
+    border: 2px solid transparent;
+    background:
+      linear-gradient(var(--dark3), var(--dark3)) padding-box,
+      linear-gradient(135deg, #c9a84c, #f5dfa0, #a07832) border-box;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  .fp-small-gems {
+    display: flex; gap: 12px; margin-top: 12px;
+  }
+  .fp-sg {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffe4a0, #c9a84c, #7a5a1c);
+    box-shadow: 0 0 10px rgba(201,168,76,0.4);
+  }
+
+  .featured-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+  }
+  .featured-tag {
+    display: inline-flex;
+    padding: 6px 18px;
+    border: 1px solid var(--gold);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    width: fit-content;
+  }
+  .featured-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--white);
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+  .featured-title em { font-style: italic; color: var(--gold2); }
+  .featured-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.85;
+    font-weight: 300;
+    max-width: 380px;
+    margin-bottom: 40px;
+  }
+  .featured-price-row {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .featured-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--gold2);
+    letter-spacing: -2px;
+  }
+  .featured-price-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .featured-actions {
+    display: flex; gap: 16px;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+  }
+  .service-card {
+    padding: 48px 36px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: border-color 0.3s;
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  .service-card.visible { animation: fadeUp 0.6s ease forwards; }
+  .service-card:hover { border-color: var(--border-bright); }
+
+  .service-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .service-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .service-text {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+  }
+  .testimonial {
+    padding: 40px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  .testimonial.visible { animation: fadeUp 0.6s ease forwards; }
+  .testimonial:hover { border-color: var(--border-bright); }
+
+  .t-stars {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+  }
+  .t-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+  .t-author {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .t-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--border-bright);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gold2);
+  }
+  .t-name {
     font-size: 13px;
     font-weight: 600;
     color: var(--text);
+    letter-spacing: 0.3px;
   }
-  .author-tag {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 2px;
-    font-family: 'JetBrains Mono', monospace;
+  .t-location {
+    font-size: 10px;
+    color: var(--muted2);
+    letter-spacing: 1px;
+    margin-top: 3px;
+    text-transform: uppercase;
   }
 
-  /* CTA */
-  .cta {
+  /* NEWSLETTER */
+  .newsletter {
+    background: var(--dark2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 100px 80px;
     text-align: center;
-    padding: 120px 48px;
     position: relative;
     overflow: hidden;
   }
-  .cta::before {
+  .newsletter::before {
     content: '';
     position: absolute;
-    width: 600px; height: 600px;
+    width: 700px; height: 700px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(124,109,250,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
     pointer-events: none;
   }
-
-  .cta-title {
-    font-size: clamp(40px, 6vw, 72px);
-    font-weight: 900;
-    letter-spacing: -2.5px;
+  .newsletter-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 300;
+    letter-spacing: -1px;
     color: var(--white);
-    position: relative; z-index: 1;
     margin-bottom: 16px;
-    line-height: 1.05;
-  }
-  .cta-title span {
-    background: linear-gradient(135deg, var(--accent2), var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .cta-sub {
-    font-size: 16px;
-    color: var(--muted);
     position: relative; z-index: 1;
-    margin-bottom: 40px;
+  }
+  .newsletter-title em { font-style: italic; color: var(--gold2); }
+  .newsletter-sub {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 400px;
+    margin: 0 auto 40px;
+    line-height: 1.75;
+    font-weight: 300;
+    position: relative; z-index: 1;
+  }
+  .newsletter-form {
+    display: flex; gap: 0;
+    max-width: 440px;
+    margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  .newsletter-input {
+    flex: 1;
+    padding: 16px 24px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-bright);
+    border-right: none;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .newsletter-input:focus { border-color: var(--gold); }
+  .newsletter-input::placeholder { color: var(--muted2); }
+  .newsletter-submit {
+    padding: 16px 28px;
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .newsletter-submit:hover {
+    background: var(--gold2);
+    border-color: var(--gold2);
   }
 
   /* FOOTER */
   footer {
+    background: var(--dark);
     border-top: 1px solid var(--border);
-    padding: 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 24px;
-    flex-wrap: wrap;
+    padding: 80px 80px 40px;
+    max-width: 100%;
   }
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 60px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand {}
+  .footer-logo-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--gold2);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .footer-logo-sub {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--muted2);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .footer-brand-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+    font-weight: 300;
+    max-width: 280px;
+    margin-bottom: 28px;
+  }
+  .footer-contact-line {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    line-height: 2;
+    font-weight: 300;
+  }
+  .footer-contact-line span { color: var(--gold); font-weight: 500; }
 
-  .footer-logo {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--white);
-    display: flex; align-items: center; gap: 8px;
+  .footer-col-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
   }
   .footer-links {
-    display: flex; gap: 24px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
   .footer-links a {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--muted);
     text-decoration: none;
+    font-weight: 300;
+    letter-spacing: 0.3px;
     transition: color 0.2s;
   }
-  .footer-links a:hover { color: var(--text); }
+  .footer-links a:hover { color: var(--gold2); }
+
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
   .footer-copy {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted2);
-    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .footer-bottom-links {
+    display: flex; gap: 28px;
+  }
+  .footer-bottom-links a {
+    font-size: 11px;
+    color: var(--muted2);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .footer-bottom-links a:hover { color: var(--muted); }
+
+  /* Gold divider decoration */
+  .gold-divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 auto 48px;
+    max-width: 300px;
+    justify-content: center;
+  }
+  .gd-line { flex: 1; height: 1px; background: var(--border-bright); }
+  .gd-diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
   }
 
   @media (max-width: 768px) {
     nav { padding: 0 20px; }
-    .nav-right .nav-link { display: none; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 100px 20px 60px; }
+    .hero-right { height: 400px; }
     .section { padding: 80px 20px; }
-    .why-grid { grid-template-columns: 1fr; gap: 12px; }
-    .reviews-grid { grid-template-columns: 1fr; }
-    .features-list { grid-template-columns: 1fr; }
-    .trust-bar { gap: 20px; flex-wrap: wrap; }
-    .hero-title { letter-spacing: -2px; }
-    footer { flex-direction: column; gap: 20px; }
-    .marquee-wrap { margin: 0 -20px; }
+    .products-grid { grid-template-columns: 1fr; }
+    .featured-inner { grid-template-columns: 1fr; }
+    .featured-info { padding: 48px 24px; }
+    .featured-visual { padding: 60px 24px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; gap: 40px; }
+    .newsletter { padding: 80px 20px; }
+    footer { padding: 60px 20px 40px; }
+    .hero-stats { flex-wrap: wrap; gap: 28px; }
+    .newsletter-form { flex-direction: column; }
+    .newsletter-input { border-right: 1px solid var(--border-bright); border-bottom: none; }
   }
 </style>
 </head>
 <body>
 
-<div class="noise"></div>
+<!-- CURSOR -->
 <div class="cursor-dot" id="cursorDot"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
 <!-- NAV -->
 <nav>
-  <div class="logo">
-    <div class="logo-dot"></div>
-    Nova Hub
+  <div class="logo-wrap">
+    <div class="logo-main">Sabrine</div>
+    <div class="logo-sub">Juweliere &amp; Goldschmiede</div>
   </div>
-  <div class="nav-right">
-    <a href="#product" class="nav-link">Script</a>
-    <a href="#why" class="nav-link">Features</a>
-    <a href="#reviews" class="nav-link">Reviews</a>
-    <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="discord-btn">
-      <span class="discord-icon">☎</span>
-      Discord
-    </a>
-  </div>
+  <ul class="nav-links">
+    <li><a href="#kollektionen">Kollektionen</a></li>
+    <li><a href="#highlight">Highlight</a></li>
+    <li><a href="#service">Service</a></li>
+    <li><a href="#bewertungen">Bewertungen</a></li>
+  </ul>
+  <a href="#kollektionen" class="nav-cta">Jetzt entdecken</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-
-  <div class="hero-content">
-    <div class="badge">
-      <div class="badge-dot"></div>
-      NOVA SCRIPT — LIVE NOW
-    </div>
-
+  <div class="hero-left">
+    <div class="hero-eyebrow">Seit 2008 · Berlin</div>
     <h1 class="hero-title">
-      The Script<br>
-      <span class="grad">That Breaks Games.</span>
+      Zeitlose<br>
+      <em>Eleganz</em><br>
+      in Gold.
     </h1>
-
-    <p class="hero-sub">
-      One script. <strong>Every unfair advantage.</strong> Instant steal, auto PvP, infinite jump, brainrot movement &mdash; all in one seamlessly updated package.
+    <p class="hero-desc">
+      Handgefertigte Goldschmiedearbeiten für Menschen, die das Besondere lieben. Jedes Stück aus unserer Werkstatt erzählt eine Geschichte — Ihre Geschichte.
     </p>
-
-    <div class="hero-cta">
-      <a href="#product" class="btn-main">
-        Get Nova Script →
-      </a>
-      <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="btn-ghost">
-        ☎ Join Discord
-      </a>
+    <div class="hero-actions">
+      <a href="#kollektionen" class="btn-gold">Kollektion entdecken</a>
+      <a href="#service" class="btn-outline">Über uns</a>
     </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-val">2.400+</div>
+        <div class="stat-label">Zufriedene Kunden</div>
+      </div>
+      <div>
+        <div class="stat-val">15 J.</div>
+        <div class="stat-label">Erfahrung</div>
+      </div>
+      <div>
+        <div class="stat-val">100%</div>
+        <div class="stat-label">Handarbeit</div>
+      </div>
+    </div>
+  </div>
 
-    <div class="trust-bar">
-      <div class="trust-item">
-        <div class="trust-num">10<span>K+</span></div>
-        <div class="trust-label">Players</div>
+  <div class="hero-right">
+    <div class="hero-img-panel">
+      <div class="hero-visual"></div>
+      <div class="v-line v-line-1"></div>
+      <div class="v-line v-line-2"></div>
+      <div class="corner-dot corner-dot-tl"></div>
+      <div class="corner-dot corner-dot-br"></div>
+
+      <div class="big-ring"></div>
+
+      <div class="gem-cluster">
+        <div class="gem gem-1"></div>
+        <div class="gem gem-2"></div>
+        <div class="gem gem-3"></div>
+        <div class="gem gem-4"></div>
       </div>
-      <div class="trust-divider"></div>
-      <div class="trust-item">
-        <div class="trust-num">99<span>%</span></div>
-        <div class="trust-label">Undetected</div>
-      </div>
-      <div class="trust-divider"></div>
-      <div class="trust-item">
-        <div class="trust-num">Weekly</div>
-        <div class="trust-label">Updates</div>
-      </div>
-      <div class="trust-divider"></div>
-      <div class="trust-item">
-        <div class="trust-num">24<span>/7</span></div>
-        <div class="trust-label">Support</div>
+
+      <div class="visual-deco-text">
+        „Jedes Stück<br>ist ein Versprechen<br>der Ewigkeit."
       </div>
     </div>
   </div>
 </section>
 
 <!-- MARQUEE -->
-<div style="padding: 0 48px; overflow: hidden; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-  <div class="marquee-track" style="padding: 18px 0;">
-    <div class="marquee-item"><span class="m-dot"></span> INSTANT STEAL</div>
-    <div class="marquee-item"><span class="m-dot"></span> AUTO PVP</div>
-    <div class="marquee-item"><span class="m-dot"></span> INFINITE JUMP</div>
-    <div class="marquee-item"><span class="m-dot"></span> BRAINROT MOVEMENT</div>
-    <div class="marquee-item"><span class="m-dot"></span> WEEKLY CHECKS</div>
-    <div class="marquee-item"><span class="m-dot"></span> UNDETECTED</div>
-    <div class="marquee-item"><span class="m-dot"></span> INSTANT DELIVERY</div>
-    <div class="marquee-item"><span class="m-dot"></span> INSTANT STEAL</div>
-    <div class="marquee-item"><span class="m-dot"></span> AUTO PVP</div>
-    <div class="marquee-item"><span class="m-dot"></span> INFINITE JUMP</div>
-    <div class="marquee-item"><span class="m-dot"></span> BRAINROT MOVEMENT</div>
-    <div class="marquee-item"><span class="m-dot"></span> WEEKLY CHECKS</div>
-    <div class="marquee-item"><span class="m-dot"></span> UNDETECTED</div>
-    <div class="marquee-item"><span class="m-dot"></span> INSTANT DELIVERY</div>
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="marquee-sep"></span>750er Gelbgold</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Handgefertigt</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Diamanten & Edelsteine</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Trauringe</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Anfertigungen auf Maß</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Goldschmiedemeister</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Kostenlose Beratung</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Express-Service</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>750er Gelbgold</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Handgefertigt</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Diamanten & Edelsteine</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Trauringe</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Anfertigungen auf Maß</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Goldschmiedemeister</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Kostenlose Beratung</div>
+    <div class="marquee-item"><span class="marquee-sep"></span>Express-Service</div>
   </div>
 </div>
 
-<!-- PRODUCT -->
-<section class="section" id="product">
-  <div class="section-label">001 — The Script</div>
-  <h2 class="section-title">Nova Script<br><span class="muted">One Tool. Total Control.</span></h2>
+<!-- KOLLEKTIONEN -->
+<section class="section" id="kollektionen">
+  <div class="section-header">
+    <div>
+      <div class="eyebrow">001 — Kollektionen</div>
+      <h2 class="section-title-main">Unsere<br><em>Goldstücke.</em></h2>
+    </div>
+    <a href="#" class="btn-outline" style="flex-shrink:0; margin-bottom:8px;">Alle ansehen →</a>
+  </div>
 
-  <div class="product-wrapper">
+  <div class="products-grid">
+    <!-- Ring -->
     <div class="product-card">
-      <div class="card-top-accent"></div>
-      <div class="card-inner">
-        <div class="card-header">
-          <div class="card-badges">
-            <span class="tag tag-purple">⚡ Nova Script</span>
-            <span class="tag tag-green">✓ Undetected</span>
-            <span class="tag tag-orange">🔥 Trending</span>
+      <div class="product-visual visual-ring">
+        <div class="product-badge-wrap">
+          <span class="p-badge p-badge-gold">Bestseller</span>
+        </div>
+        <div class="item-wrap">
+          <div class="outer-ring"></div>
+          <div class="stone"></div>
+          <div class="inner-shine"></div>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">Ring · 750er Gelbgold</div>
+        <div class="product-name">Solitär Sapphir Ring</div>
+        <p class="product-desc">Klassischer Solitärring mit natürlichem Saphir, handgefasst in 18 Karat Gelbgold. Zeitloser Ausdruck feiner Goldschmiedekunst.</p>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">€ 1.890</div>
+            <div class="product-price-note">inkl. Zertifikat</div>
           </div>
-          <div class="card-price-area">
-            <div class="price"><sup>€</sup>9<span style="font-size:22px;letter-spacing:-1px;">.99</span></div>
-            <div class="price-note">one-time purchase</div>
+          <a href="#" class="add-btn">+</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collier -->
+    <div class="product-card">
+      <div class="product-visual visual-necklace">
+        <div class="product-badge-wrap">
+          <span class="p-badge p-badge-outline">Neu</span>
+        </div>
+        <svg width="200" height="110" viewBox="0 0 200 110" fill="none" style="position:absolute; top:30px;">
+          <path d="M20,10 Q100,-20 180,10" stroke="url(#goldGrad)" stroke-width="2" fill="none"/>
+          <path d="M20,10 Q100,-15 180,10" stroke="rgba(201,168,76,0.2)" stroke-width="1" fill="none" stroke-dasharray="4 4"/>
+          <defs>
+            <linearGradient id="goldGrad" x1="0" y1="0" x2="200" y2="0">
+              <stop offset="0%" stop-color="#7a5a1c"/>
+              <stop offset="30%" stop-color="#c9a84c"/>
+              <stop offset="50%" stop-color="#f5dfa0"/>
+              <stop offset="70%" stop-color="#c9a84c"/>
+              <stop offset="100%" stop-color="#7a5a1c"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div style="margin-top: 60px; display:flex; flex-direction:column; align-items:center;">
+          <div style="width:2px;height:50px;background:linear-gradient(to bottom,#c9a84c,#f5dfa0);"></div>
+          <div class="pend-outer"><div class="pend-inner"></div></div>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">Collier · 585er Gelbgold</div>
+        <div class="product-name">Goldmedaillon Collier</div>
+        <p class="product-desc">Feines Goldkollier mit handgraviertem Medaillon aus 14 Karat Gold. Auf Wunsch mit Personalisierung und Foto-Inlay erhältlich.</p>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">€ 890</div>
+            <div class="product-price-note">inkl. Gravur</div>
+          </div>
+          <a href="#" class="add-btn">+</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Armband -->
+    <div class="product-card">
+      <div class="product-visual visual-bracelet">
+        <div class="product-badge-wrap">
+          <span class="p-badge p-badge-gold">Limitiert</span>
+        </div>
+        <div class="brace-wrap">
+          <div class="brace-ring"></div>
+          <div class="brace-gems">
+            <div class="brace-gem bg1"></div>
+            <div class="brace-gem bg2"></div>
+            <div class="brace-gem bg3"></div>
+            <div class="brace-gem bg4"></div>
+            <div class="brace-gem bg5"></div>
+            <div class="brace-gem bg6"></div>
+            <div class="brace-gem bg7"></div>
+            <div class="brace-gem bg8"></div>
           </div>
         </div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">Armband · 750er Gelbgold</div>
+        <div class="product-name">Diamant Tennisarmband</div>
+        <p class="product-desc">Elegantes Tennisarmband mit 18 Brillanten in 18 Karat Gelbgold, Gesamtkaratgewicht 1,80 ct. Lieferung in hochwertiger Schmuckbox.</p>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">€ 4.250</div>
+            <div class="product-price-note">GIA-Zertifikat</div>
+          </div>
+          <a href="#" class="add-btn">+</a>
+        </div>
+      </div>
+    </div>
 
-        <div class="card-name">Nova <span>Script</span></div>
-        <p class="card-desc">
-          Built for the players who don't lose. Nova Script is the most aggressive, polished, and consistently updated Roblox script on the market. Steal items before anyone blinks, fight on autopilot, jump when physics says no — and look absolutely unhinged while doing it. This is brainrot, engineered.
-        </p>
-
-        <div class="features-list">
-          <div class="feature">
-            <div class="feature-icon-box">⚡</div>
-            <div class="feature-text-box">
-              <div class="feature-title">Instant Steal</div>
-              <div class="feature-sub">Snatch items the moment they spawn. Zero delay, zero competition.</div>
-            </div>
+    <!-- Ohrringe -->
+    <div class="product-card">
+      <div class="product-visual visual-earrings">
+        <div class="product-badge-wrap">
+          <span class="p-badge p-badge-outline">Paar</span>
+        </div>
+        <div class="ear-wrap">
+          <div class="earring">
+            <div class="ear-hook"></div>
+            <div class="ear-chain"></div>
+            <div class="ear-drop"></div>
           </div>
-          <div class="feature">
-            <div class="feature-icon-box">⚔️</div>
-            <div class="feature-text-box">
-              <div class="feature-title">Auto PvP</div>
-              <div class="feature-sub">Locks onto enemies and destroys them automatically. You just watch.</div>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon-box">🚀</div>
-            <div class="feature-text-box">
-              <div class="feature-title">Infinite Jump</div>
-              <div class="feature-sub">Gravity is a suggestion. Jump forever, reach anywhere, escape anything.</div>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon-box">🧠</div>
-            <div class="feature-text-box">
-              <div class="feature-title">Brainrot Movement</div>
-              <div class="feature-sub">Erratic, unpredictable, chaotic — impossible to target or counter.</div>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon-box">🔄</div>
-            <div class="feature-text-box">
-              <div class="feature-title">Weekly Updates</div>
-              <div class="feature-sub">New features and patches pushed every week. Never falls behind.</div>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon-box">🛡️</div>
-            <div class="feature-text-box">
-              <div class="feature-title">Anti-Detection Checks</div>
-              <div class="feature-sub">Regular integrity checks keep Nova Script invisible to every system.</div>
-            </div>
+          <div class="earring" style="margin-top:16px;">
+            <div class="ear-hook"></div>
+            <div class="ear-chain"></div>
+            <div class="ear-drop"></div>
           </div>
         </div>
-
-        <div class="update-ticker">
-          <div class="ticker-dot"></div>
-          <div class="ticker-text">Last update: Feb 2025 — Added new brainrot movement patterns + auto-dodge system</div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">Ohrringe · 585er Gelbgold</div>
+        <div class="product-name">Elegante Tropfenohrringe</div>
+        <p class="product-desc">Handgefertigte Tropfenohrhänger aus 14 Karat Gelbgold mit mattem Finish. Perfekter Alltagsbegleiter — dezent und gleichzeitig ausdrucksstark.</p>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">€ 640</div>
+            <div class="product-price-note">pro Paar</div>
+          </div>
+          <a href="#" class="add-btn">+</a>
         </div>
+      </div>
+    </div>
 
-        <div class="card-divider" style="margin-top: 28px;"></div>
+    <!-- Brosche -->
+    <div class="product-card">
+      <div class="product-visual visual-brooch">
+        <div class="product-badge-wrap">
+          <span class="p-badge p-badge-gold">Unikat</span>
+        </div>
+        <div class="brooch-wrap">
+          <div class="brooch-star">
+            <div class="brooch-center"></div>
+          </div>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">Brosche · 750er Gelbgold</div>
+        <div class="product-name">Sternbrosche mit Rubin</div>
+        <p class="product-desc">Prachtvolle Sternbrosche in 18 Karat Gelbgold mit natürlichem Burma-Rubin im Zentrum. Ein absolutes Einzelstück aus unserer Werkstatt.</p>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">€ 2.990</div>
+            <div class="product-price-note">Einzelanfertigung</div>
+          </div>
+          <a href="#" class="add-btn">+</a>
+        </div>
+      </div>
+    </div>
 
-        <div class="card-footer-row">
-          <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="buy-btn">
-            Get Nova Script — €9.99
-          </a>
-          <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="discord-side">
-            ☎ Discord
-          </a>
+    <!-- Kette -->
+    <div class="product-card">
+      <div class="product-visual visual-chain">
+        <div class="product-badge-wrap">
+          <span class="p-badge p-badge-outline">Klassiker</span>
+        </div>
+        <div class="chain-wrap">
+          <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+            <div class="chain-body" style="width:180px;"></div>
+            <div class="chain-body" style="width:140px; opacity:0.6;"></div>
+            <div class="chain-body" style="width:100px; opacity:0.35;"></div>
+          </div>
+          <div style="position:absolute; bottom:20px; width:18px; height:22px; background:linear-gradient(135deg,#c9a84c,#f5dfa0); border-radius:0 0 50% 50%; box-shadow:0 0 12px rgba(201,168,76,0.3);"></div>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">Kette · 585er Gelbgold</div>
+        <div class="product-name">Flachpanzerkette 45 cm</div>
+        <p class="product-desc">Hochwertige Flachpanzerkette in 14 Karat Gelbgold, Länge 45 cm. Massiv gearbeitet mit Karabinerverschluss. Vielseitig kombinierbar.</p>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">€ 1.190</div>
+            <div class="product-price-note">inkl. Verpackung</div>
+          </div>
+          <a href="#" class="add-btn">+</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WHY -->
-<section class="section" id="why" style="padding-top: 0;">
-  <div class="section-label">002 — Why Nova Hub</div>
-  <h2 class="section-title">Built Different.<br><span class="muted">On Every Level.</span></h2>
+<!-- FEATURED PIECE -->
+<div class="featured-section" id="highlight">
+  <div class="featured-inner">
+    <div class="featured-visual">
+      <div class="featured-piece">
+        <div class="fp-chain-link"></div>
+        <div style="position:relative;">
+          <div class="fp-gem-frame"></div>
+          <div class="fp-main-gem"></div>
+        </div>
+        <div class="fp-small-gems">
+          <div class="fp-sg"></div>
+          <div class="fp-sg" style="width:12px;height:12px;"></div>
+          <div class="fp-sg"></div>
+        </div>
+      </div>
+    </div>
+    <div class="featured-info">
+      <div class="featured-tag">✦ Highlight der Saison</div>
+      <h2 class="featured-title">
+        Saphir<br>
+        <em>Königin</em><br>
+        Collier
+      </h2>
+      <p class="featured-desc">
+        Unser aufwendigstes Stück der Saison: Ein außergewöhnliches Kollier mit einem 4,5-karätigen Ceylon-Saphir in tiefem Cornflower Blue, umrahmt von 32 Brillanten mit einem Gesamtgewicht von 1,2 ct — gefasst in 750er Gelbgold. Handgefertigt über mehr als 80 Arbeitsstunden.
+      </p>
+      <div class="featured-price-row">
+        <div class="featured-price">€ 18.900</div>
+        <div class="featured-price-label">inkl. GIA-Zertifikat</div>
+      </div>
+      <div class="featured-actions">
+        <a href="#" class="btn-gold">Jetzt anfragen</a>
+        <a href="#" class="btn-outline">Details ansehen</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <div class="why-grid">
-    <div class="why-card">
-      <span class="why-icon">🔒</span>
-      <div class="why-title">Stays Undetected</div>
-      <p class="why-text">Our team monitors every anti-cheat update in real time. Patches go live before most people even hear about the threat.</p>
+<!-- SERVICE -->
+<section class="section" id="service">
+  <div class="section-header">
+    <div>
+      <div class="eyebrow">002 — Unser Service</div>
+      <h2 class="section-title-main">Mehr als<br><em>Schmuck.</em></h2>
     </div>
-    <div class="why-card">
-      <span class="why-icon">⚡</span>
-      <div class="why-title">Instant Access</div>
-      <p class="why-text">Automated delivery. Purchase through Discord and get your key within seconds. No waiting, no verification queues.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <span class="service-icon">💍</span>
+      <div class="service-title">Individuelle Anfertigungen</div>
+      <p class="service-text">Von der Skizze zum fertigen Stück — wir realisieren Ihre Traumschmuckidee. Persönliche Beratung inklusive.</p>
     </div>
-    <div class="why-card">
-      <span class="why-icon">📅</span>
-      <div class="why-title">Weekly Updates</div>
-      <p class="why-text">New features, new movement patterns, new exploits — shipped every week. You paid once. You get everything forever.</p>
+    <div class="service-card">
+      <span class="service-icon">🔧</span>
+      <div class="service-title">Reparatur & Restauration</div>
+      <p class="service-text">Gebrochene Kette, matter Goldring oder loses Steinchen? Unsere Goldschmiede bringen altes Schmuck wieder zum Strahlen.</p>
     </div>
-    <div class="why-card">
-      <span class="why-icon">🛠️</span>
-      <div class="why-title">24/7 Support</div>
-      <p class="why-text">Active Discord support team. Average response under 10 minutes, any time of day or night. Real people, real help.</p>
+    <div class="service-card">
+      <span class="service-icon">✒️</span>
+      <div class="service-title">Gravur & Personalisierung</div>
+      <p class="service-text">Machen Sie jeden Schmuck zu einem persönlichen Andenken — mit Namensgravur, Datum oder einem besonderen Motiv.</p>
     </div>
-    <div class="why-card">
-      <span class="why-icon">💳</span>
-      <div class="why-title">Secure & Private</div>
-      <p class="why-text">All transactions handled through encrypted channels. Your identity and payment details stay completely private.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">👥</span>
-      <div class="why-title">Active Community</div>
-      <p class="why-text">Join 10,000+ players in the Nova Hub Discord. Share configs, get tips, and get updates the moment they drop.</p>
+    <div class="service-card">
+      <span class="service-icon">💎</span>
+      <div class="service-title">Edelstein-Expertise</div>
+      <p class="service-text">Über 500 Edelsteine auf Lager. Diamanten, Rubine, Smaragde, Saphire — wir beschaffen den perfekten Stein für Ihr Projekt.</p>
     </div>
   </div>
 </section>
 
-<!-- REVIEWS -->
-<section class="section" id="reviews" style="padding-top: 0;">
-  <div class="section-label">003 — Reviews</div>
-  <h2 class="section-title">10,000 Players.<br><span class="muted">All Winners.</span></h2>
+<!-- TESTIMONIALS -->
+<section class="section" id="bewertungen" style="padding-top:0;">
+  <div class="section-header">
+    <div>
+      <div class="eyebrow">003 — Bewertungen</div>
+      <h2 class="section-title-main">Was unsere<br><em>Kunden sagen.</em></h2>
+    </div>
+  </div>
 
-  <div class="reviews-grid">
-    <div class="review">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"The instant steal is absolutely broken. I had items before anyone even realized the round started. Best €9.99 I've ever spent."</p>
-      <div class="review-author">
-        <div class="avatar">K</div>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">„Sabrine hat unsere Eheringe entworfen und angefertigt. Das Ergebnis hat uns zu Tränen gerührt — absolut perfekt. Wir empfehlen sie jedem weiter."</p>
+      <div class="t-author">
+        <div class="t-avatar">M</div>
         <div>
-          <div class="author-name">KillSwitch_99</div>
-          <div class="author-tag">// Verified Buyer</div>
+          <div class="t-name">Maria & Tobias K.</div>
+          <div class="t-location">Berlin, 2024</div>
         </div>
       </div>
     </div>
-    <div class="review">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"Auto PvP is genuinely unfair in the best way. I went 47-0 and people started leaving the lobby. Absolutely elite script."</p>
-      <div class="review-author">
-        <div class="avatar">S</div>
+    <div class="testimonial" style="animation-delay:0.1s;">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">„Das Tennisarmband ist einfach atemberaubend. Die Qualität der Brillanten und die Verarbeitung sind auf absolutem Topniveau. Werde definitiv wiederkommen."</p>
+      <div class="t-author">
+        <div class="t-avatar">L</div>
         <div>
-          <div class="author-name">ShadowByte</div>
-          <div class="author-tag">// Nova Hub Member</div>
+          <div class="t-name">Lena R.</div>
+          <div class="t-location">Hamburg, 2024</div>
         </div>
       </div>
     </div>
-    <div class="review">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"Been using Nova for 4 months. Zero bans. The weekly updates actually hit — they added new brainrot patterns and it's insane."</p>
-      <div class="review-author">
-        <div class="avatar">R</div>
+    <div class="testimonial" style="animation-delay:0.2s;">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">„Ich habe meiner Mutter den Solitärring zum Geburtstag geschenkt. Sie war sprachlos. Die Beratung war herzlich, die Lieferung blitzschnell."</p>
+      <div class="t-author">
+        <div class="t-avatar">F</div>
         <div>
-          <div class="author-name">RedLine_X</div>
-          <div class="author-tag">// 4 Month Customer</div>
-        </div>
-      </div>
-    </div>
-    <div class="review">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"The brainrot movement makes me literally untargetable. People think I'm lagging but I'm just running Nova Script lmao."</p>
-      <div class="review-author">
-        <div class="avatar">V</div>
-        <div>
-          <div class="author-name">Vortex_Pro</div>
-          <div class="author-tag">// Verified Buyer</div>
-        </div>
-      </div>
-    </div>
-    <div class="review">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"Infinite jump + instant steal combo is just dirty. Discord support helped me set everything up in 5 minutes. Huge W."</p>
-      <div class="review-author">
-        <div class="avatar">N</div>
-        <div>
-          <div class="author-name">NightFall_</div>
-          <div class="author-tag">// Verified Buyer</div>
-        </div>
-      </div>
-    </div>
-    <div class="review">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"Cheapest and most powerful script I've used. The updates never stop coming. Nova Hub is on a different level fr fr."</p>
-      <div class="review-author">
-        <div class="avatar">G</div>
-        <div>
-          <div class="author-name">GhostTrace</div>
-          <div class="author-tag">// Verified Buyer</div>
+          <div class="t-name">Frank H.</div>
+          <div class="t-location">München, 2023</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<div class="cta">
-  <h2 class="cta-title">Ready to<br><span>dominate?</span></h2>
-  <p class="cta-sub">Join 10,000+ players who already play on a different level.</p>
-  <div style="display:flex; gap: 12px; justify-content: center;">
-    <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="btn-main" style="font-size: 16px; padding: 16px 40px;">
-      Get Nova Script — €9.99
-    </a>
-    <a href="https://discord.gg/QaDbxHezMs" target="_blank" class="btn-ghost" style="font-size: 15px;">
-      ☎ Join Discord
-    </a>
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <h2 class="newsletter-title">Exklusive Stücke.<br><em>Zuerst für Sie.</em></h2>
+  <p class="newsletter-sub">Neue Kollektionen, saisonale Highlights und private Sale-Events — als Newsletter-Abonnent erhalten Sie alles zuerst.</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="Ihre E-Mail-Adresse">
+    <button class="newsletter-submit">Anmelden</button>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">
-    <div class="logo-dot"></div>
-    Nova Hub
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo-main">Sabrine</div>
+        <div class="footer-logo-sub">Juweliere & Goldschmiede</div>
+        <p class="footer-brand-desc">Handgefertigte Goldschmiedearbeiten aus Berlin seit 2008. Jedes Stück entsteht mit Leidenschaft, Präzision und dem Anspruch, ein Erbstück zu werden.</p>
+        <div class="footer-contact-line">
+          <span>Adresse</span> Kurfürstendamm 212, 10719 Berlin<br>
+          <span>Telefon</span> +49 30 4920 8810<br>
+          <span>E-Mail</span> atelier@sabrine-juweliere.de<br>
+          <span>Öffnungszeiten</span> Mo–Sa, 10:00 – 18:30 Uhr
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Kollektionen</div>
+        <ul class="footer-links">
+          <li><a href="#">Ringe</a></li>
+          <li><a href="#">Colliers & Ketten</a></li>
+          <li><a href="#">Armbänder</a></li>
+          <li><a href="#">Ohrringe</a></li>
+          <li><a href="#">Broschen</a></li>
+          <li><a href="#">Trauringe</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Service</div>
+        <ul class="footer-links">
+          <li><a href="#">Anfertigungen</a></li>
+          <li><a href="#">Reparatur</a></li>
+          <li><a href="#">Gravur</a></li>
+          <li><a href="#">Edelsteine</a></li>
+          <li><a href="#">Restauration</a></li>
+          <li><a href="#">Bewertung & Ankauf</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Unternehmen</div>
+        <ul class="footer-links">
+          <li><a href="#">Über uns</a></li>
+          <li><a href="#">Werkstatt</a></li>
+          <li><a href="#">Presse</a></li>
+          <li><a href="#">Kontakt</a></li>
+          <li><a href="#">Karriere</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Sabrine Juweliere. Alle Rechte vorbehalten.</div>
+      <div class="footer-bottom-links">
+        <a href="#">Datenschutz</a>
+        <a href="#">Impressum</a>
+        <a href="#">AGB</a>
+        <a href="#">Widerrufsrecht</a>
+      </div>
+    </div>
   </div>
-  <div class="footer-links">
-    <a href="https://discord.gg/QaDbxHezMs" target="_blank">Discord</a>
-    <a href="#">Terms of Service</a>
-    <a href="#">FAQ</a>
-    <a href="#">Support</a>
-  </div>
-  <div class="footer-copy">© 2025 Nova Hub. All rights reserved.</div>
 </footer>
 
 <script>
@@ -1070,49 +1718,45 @@
   const dot = document.getElementById('cursorDot');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
     dot.style.left = mx + 'px';
     dot.style.top = my + 'px';
   });
-
   (function animate() {
-    rx += (mx - rx) * 0.1;
-    ry += (my - ry) * 0.1;
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
     ring.style.left = rx + 'px';
     ring.style.top = ry + 'px';
     requestAnimationFrame(animate);
   })();
-
-  document.querySelectorAll('a, button, .product-card, .why-card, .review').forEach(el => {
+  document.querySelectorAll('a, button, .product-card, .service-card, .testimonial').forEach(el => {
     el.addEventListener('mouseenter', () => {
-      dot.style.transform = 'translate(-50%,-50%) scale(2.5)';
-      ring.style.transform = 'translate(-50%,-50%) scale(1.6)';
-      ring.style.borderColor = 'rgba(124,109,250,0.7)';
+      dot.style.transform = 'translate(-50%,-50%) scale(2)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1.5)';
+      ring.style.borderColor = 'rgba(201,168,76,0.7)';
     });
     el.addEventListener('mouseleave', () => {
       dot.style.transform = 'translate(-50%,-50%) scale(1)';
       ring.style.transform = 'translate(-50%,-50%) scale(1)';
-      ring.style.borderColor = 'rgba(124,109,250,0.4)';
+      ring.style.borderColor = 'rgba(201,168,76,0.4)';
     });
   });
 
   // SCROLL ANIMATIONS
   const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+    entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.12 });
 
-  document.querySelectorAll('.why-card, .review').forEach((el, i) => {
-    el.style.animationDelay = (i * 0.07) + 's';
+  document.querySelectorAll('.service-card, .testimonial').forEach((el, i) => {
+    el.style.animationDelay = (i * 0.08) + 's';
     observer.observe(el);
   });
 </script>
-
 </body>
 </html>
